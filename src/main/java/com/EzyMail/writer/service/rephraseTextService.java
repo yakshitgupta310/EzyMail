@@ -1,24 +1,24 @@
 package com.EzyMail.writer.service;
 
 import com.EzyMail.writer.dto.Request;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.tomcat.util.json.JSONParser;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.RestOperations;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Mono;
 
-import java.text.MessageFormat;
 import java.util.Map;
 
 @Service
-public class generateEmailService {
+public class rephraseTextService {
 
     @Autowired
     private RestTemplate restTemplate;
@@ -29,9 +29,9 @@ public class generateEmailService {
     @Value("${gemini.api.ApiKey}")
     private String geminiApiKey;
 
-    public String generateEmail(Request request){
+    public String rephraseText(Request request){
+        //form request
         String prompt = buildPrompt(request);
-
         Map<String, Object> requestBody = Map.of(
                 "contents",new Object[]{
                         Map.of("parts", new Object[]{
@@ -39,35 +39,35 @@ public class generateEmailService {
                         })
                 }
         );
-        
+        //make a call to gen api
         HttpHeaders headers = new HttpHeaders();
         headers.set("Content-Type", "application/json");
 
         HttpEntity<Map<String, Object>> entity = new HttpEntity<>(requestBody, headers);
         ResponseEntity<String> response = restTemplate.exchange(geminiApiUrl+geminiApiKey, HttpMethod.POST, entity, String.class);
+        //extract text from response
+        //String data = extractRephrasedText(response.getBody());
 
-        return extractResponseContent(response.getBody());
+        return extractRephrasedText(response.getBody());
+        //return response.getBody();
     }
 
-    private String buildPrompt(Request request){
-        StringBuilder prompt = new StringBuilder();
-        prompt.append("Generate a professional email response for the following mail content. Please don't generate a subject for the response.");
-        if(request.getTone()!=null && !request.getTone().isEmpty()){
-            prompt.append("Use a ").append(request.getTone()).append(" tone.");
-        }
-        prompt.append("\n Original Mail Content: \n").append(request.getContent());
-        return prompt.toString();
-    }
-
-    private String extractResponseContent(String response){
-        try{
+    private String extractRephrasedText(String body) {
+        try {
             ObjectMapper mapper = new ObjectMapper();
-            JsonNode rootNode = mapper.readTree(response);
-            String text = String.format(rootNode.path("candidates")
-                    .get(0).path("content").path("parts").get(0).path("text").asText());
-            return text;
+            JsonNode rootNode = mapper.readTree(body);
+            String response = rootNode.path("candidates").get(0).path("content").path("parts").get(0).path("text").asText();
+            return response;
         } catch (Exception e) {
             return "Error processing the request " + e.getMessage();
         }
     }
+
+    private String buildPrompt(Request request) {
+        StringBuilder builder = new StringBuilder();
+        builder.append("Rephrase the following content. Keep it concise and easy to understand.");
+        builder.append("\nHere is the content - ").append(request.getContent());
+        return builder.toString();
+    }
 }
+
