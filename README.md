@@ -5,7 +5,7 @@
     It has been hosted online using Railway.
 
 ## 🌟 Features
-- ✅ AI-powered smart replies for Gmail  
+- ✅ AI-powered smart replies for Gmail with seamless integration into Gmail UI compose box. 
 - ✅ Text rephrasing with multiple tone options  
 - ✅ REST API for seamless integration with the Chrome extension  
 - ✅ Secure & scalable Spring Boot backend  
