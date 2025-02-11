@@ -11,7 +11,6 @@
 - ✅ Secure & scalable Spring Boot backend  
 
 
----
 
 ## 📌 Tech Stack
 - **Backend**: Java, Spring Boot, Spring Web  
@@ -19,11 +18,9 @@
 - **Hosting**: Railway 
 - **Security**: CORS
 
----
 
 🌍 Deployment - [ezymail-production.up.railway.app](https://ezymail-production.up.railway.app/ezymail)
 
----
 
 ## ⚡ API Endpoints
 
