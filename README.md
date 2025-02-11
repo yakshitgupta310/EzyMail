@@ -19,7 +19,7 @@
 - **Security**: CORS
 
 
-🌍 Deployment - [ezymail-production.up.railway.app](https://ezymail-production.up.railway.app/ezymail)
+## 🌍 Deployment - [EzyMail](https://ezymail-production.up.railway.app/ezymail)
 
 
 ## ⚡ API Endpoints
