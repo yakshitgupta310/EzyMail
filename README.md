@@ -42,6 +42,6 @@
 #### **Request:**
 ```json
 {
-    "content":"Email content"
+    "content":"Content to be rephrased"
 }
 ```
